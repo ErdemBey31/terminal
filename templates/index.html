@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Siyah Ekran</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: monospace;
+            padding: 20px;
+        }
+
+        input {
+            background-color: black;
+            color: white;
+            border: none;
+            outline: none;
+            font-family: monospace;
+            width: 100%;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <pre id="output"></pre>
+
+    <form method="POST" action="/command">
+        <input type="text" name="command" id="command" autocomplete="off" autofocus>
+    </form>
+
+    <script>
+        function updateOutput(response) {
+            var output = document.getElementById('output');
+            output.textContent += response;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        var form = document.querySelector('form');
+        var commandInput = document.getElementById('command');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var command = commandInput.value.trim();
+            if (command !== '') {
+                commandInput.value = '';
+
+                updateOutput('\n$ ' + command + '\n');
+
+                fetch('/command', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        'command': command
+                    })
+                })
+                .then(response => response.text())
+                .then(data => updateOutput(data))
+                .catch(error => console.error(error));
+            }
+        });
+    </script>
+</body>
+</html>
