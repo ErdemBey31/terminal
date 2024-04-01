@@ -1,5 +1,7 @@
 import subprocess
 from flask import Flask, render_template, request
+from subprocess import PIPE, STDOUT
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -14,7 +16,13 @@ def command():
 
 def run_command(command):
     try:
-        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
+        process = subprocess.Popen(command, shell=True, stdout=PIPE, stderr=STDOUT, universal_newlines=True)
+        output = ''
+        while True:
+            line = process.stdout.readline()
+            if not line:
+                break
+            output += line
         return output
     except subprocess.CalledProcessError as e:
         return "ERROR: " + str(e.output)
