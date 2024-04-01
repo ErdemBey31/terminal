@@ -19,6 +19,3 @@ def run_command(command):
         return output
     except subprocess.CalledProcessError as e:
         return "Hata: " + str(e.output)
-
-if __name__ == '__main__':
-    app.run(debug=True)
