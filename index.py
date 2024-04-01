@@ -1,6 +1,5 @@
 import subprocess
 from flask import Flask, render_template, request
-
 app = Flask(__name__)
 
 @app.route('/')
@@ -18,4 +17,4 @@ def run_command(command):
         output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
         return output
     except subprocess.CalledProcessError as e:
-        return "Hata: " + str(e.output)
+        return "ERROR: " + str(e.output)
